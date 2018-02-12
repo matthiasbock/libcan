@@ -54,7 +54,7 @@ void SocketCAN::open(char* interface)
     sockfd = socket(PF_CAN, SOCK_RAW, CAN_RAW);
     if (sockfd == -1)
     {
-        printf("Error creating a CAN socket\n");
+        printf("Error: Unable to create a CAN socket\n");
         return;
     }
     printf("CAN socket created.\n");
@@ -69,8 +69,25 @@ void SocketCAN::open(char* interface)
         close();
         return;
     }
+    printf("Found: %s has interface index %d.\n", interface, if_request.ifr_ifindex);
 
+    // Bind the socket to the network interface
+    addr.can_family = AF_CAN;
+    addr.can_ifindex = if_request.ifr_ifindex;
+    int rc = bind(
+        sockfd,
+        reinterpret_cast<struct sockaddr*>(&addr),
+        sizeof(addr)
+    );
+    if (rc == -1)
+    {
+        printf("Failed to bind socket to network interface\n");
 
+        // Invalidate unusable socket
+        close();
+        return;
+    }
+    printf("Successfully bound socket to interface %d.\n", if_request.ifr_ifindex);
 }
 
 

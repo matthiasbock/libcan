@@ -16,6 +16,10 @@
  */
 typedef struct ifreq interface_request_t;
 
+/**
+ * Socket address type for CAN sockets
+ */
+typedef struct sockaddr_can can_socket_address_t;
 
 /**
  * Facilitates frame transmission and reception via a CAN adapter
@@ -29,6 +33,8 @@ class SocketCAN: public CANAdapter
 	int sockfd;
 
     interface_request_t if_request;
+
+    can_socket_address_t addr;
 
   public:
 	/** Constructor */
