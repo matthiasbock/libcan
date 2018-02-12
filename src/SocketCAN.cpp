@@ -58,7 +58,7 @@ void SocketCAN::open(char* interface)
         printf("Error: Unable to create a CAN socket\n");
         return;
     }
-    printf("CAN socket created.\n");
+    printf("Created CAN socket with descriptor %d.\n", sockfd);
 
     // Get the index of the network interface
     strncpy(if_request.ifr_name, interface, IFNAMSIZ);
@@ -97,6 +97,8 @@ void SocketCAN::open(char* interface)
 
 void SocketCAN::close()
 {
+    terminate_receiver_thread = true;
+
     if (!is_open())
         return;
 
@@ -130,12 +132,54 @@ void SocketCAN::transmit(can_frame_t* frame)
 
 static void* socketcan_receiver_thread(void* argv)
 {
+    /*
+     * The first and only argument to this function
+     * is the pointer to the object, which started the thread.
+     */
     SocketCAN* sock = (SocketCAN*) argv;
 
-    // TODO: select...
+    // Holds the set of descriptors, that 'select' shall monitor
+    fd_set descriptors;
 
-    printf("Child thread says hello world!\n");
+    // Highest file descriptor in set
+    int maxfd = sock->sockfd;
 
+    // How long 'select' shall wait before returning with timeout
+    struct timeval timeout;
+
+    // Buffer to store incoming frame
+    can_frame_t rx_frame;
+
+    // Run until termination signal received
+    while (!sock->terminate_receiver_thread)
+    {
+        // Clear descriptor set
+        FD_ZERO(&descriptors);
+        // Add socket descriptor
+        FD_SET(sock->sockfd, &descriptors);
+//        printf("Added %d to monitored descriptors.\n", sock->sockfd);
+
+        // Set timeout
+        timeout.tv_sec  = 1;
+        timeout.tv_usec = 0;
+
+        // Wait until timeout or activity on any descriptor
+        if (select(maxfd+1, &descriptors, NULL, NULL, &timeout) == 1)
+        {
+//            printf("Something happened.\n");
+            auto len = read(sock->sockfd, &rx_frame, CAN_MTU);
+
+            printf("Received %d bytes.\n", (int) len);
+        }
+        else
+        {
+            printf("Received nothing.\n");
+        }
+    }
+
+    printf("Receiver thread terminated.\n");
+
+    // Thread terminates
     return NULL;
 }
 
@@ -147,6 +191,7 @@ void SocketCAN::start_receiver_thread()
      *
      * See also: https://www.thegeekstuff.com/2012/04/create-threads-in-linux/
      */
+    terminate_receiver_thread = false;
     int rc = pthread_create(&receiver_thread_id, NULL, &socketcan_receiver_thread, this);
     if (rc != 0)
     {

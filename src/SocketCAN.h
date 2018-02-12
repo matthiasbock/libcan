@@ -29,32 +29,37 @@ typedef struct sockaddr_can can_socket_address_t;
 class SocketCAN: public CANAdapter
 {
   private:
-    /**
-     * CAN socket file descriptor
-     */
-	int sockfd;
-
     interface_request_t if_request;
 
     can_socket_address_t addr;
 
-    pthread_t       receiver_thread_id;
+    pthread_t receiver_thread_id;
 
   public:
-	/** Constructor */
-	SocketCAN();
-	/** Destructor */
-	~SocketCAN();
+    /**
+     * CAN socket file descriptor
+     */
+    int sockfd = -1;
 
-	/**
-	 * Open and bind socket
-	 */
-	void open(char*);
+    /**
+     * Request for the child thread to terminate
+     */
+    bool terminate_receiver_thread = false;
 
-	/**
-	 * Close and unbind socket
-	 */
-	void close();
+    /** Constructor */
+    SocketCAN();
+    /** Destructor */
+    ~SocketCAN();
+
+    /**
+     * Open and bind socket
+     */
+    void open(char*);
+
+    /**
+     * Close and unbind socket
+     */
+    void close();
 
     /**
      * Returns whether the socket is open or closed
@@ -64,14 +69,14 @@ class SocketCAN: public CANAdapter
      */
     bool is_open();
 
-	/**
-	 * Sends the referenced frame to the bus
-	 */
-	void transmit(can_frame_t*);
+    /**
+     * Sends the referenced frame to the bus
+     */
+    void transmit(can_frame_t*);
 
-	/**
-	 * Starts a new thread, that will wait for socket events
-	 */
-	void start_receiver_thread();
+    /**
+     * Starts a new thread, that will wait for socket events
+     */
+    void start_receiver_thread();
 };
 

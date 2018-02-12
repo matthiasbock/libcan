@@ -10,11 +10,11 @@ int main()
      * Instantiate CAN adapter
      * This will automatically call the constructor.
      */
-    SocketCAN can0;
+    SocketCAN* can0 = new SocketCAN();
 
-    can0.open("can0");
+    can0->open("can0");
 
-    sleep(1);
+    sleep(2);
 
     can_frame_t frame;
     frame.can_id = 0x123;
@@ -23,7 +23,11 @@ int main()
     frame.data[1] = 2;
     frame.data[2] = 3;
 
-    can0.transmit(&frame);
+    can0->transmit(&frame);
 
-	return 0;
+    delete can0;
+
+    sleep(2);
+
+    return 0;
 }
