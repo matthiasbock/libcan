@@ -1,20 +1,26 @@
 
 // sleep
 #include <unistd.h>
+// printf
+#include <stdio.h>
+// uintxx_t
+#include <stdint.h>
 #include <SocketCAN.h>
+
+
+void rx_handler(can_frame_t* frame)
+{
+    // TODO: Do something here with the received frame
+}
 
 
 int main()
 {
-    /*
-     * Instantiate CAN adapter
-     * This will automatically call the constructor.
-     */
-    SocketCAN* can0 = new SocketCAN();
+    SocketCAN* adapter = new SocketCAN();
+    adapter->reception_handler = &rx_handler;
+    adapter->open("can0");
 
-    can0->open("can0");
-
-    sleep(2);
+    sleep(5);
 
     can_frame_t frame;
     frame.can_id = 0x123;
@@ -23,11 +29,11 @@ int main()
     frame.data[1] = 2;
     frame.data[2] = 3;
 
-    can0->transmit(&frame);
+    adapter->transmit(&frame);
 
-    delete can0;
+    delete adapter;
 
-    sleep(2);
+    sleep(1.1);
 
     return 0;
 }

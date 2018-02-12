@@ -6,6 +6,7 @@
 
 #include <CANFrame.h>
 
+
 /**
  * Specifies the type of a CAN adapter
  */
@@ -16,6 +17,11 @@ typedef enum
     ADAPTER_SLCAN,
 } can_adapter_t;
 
+/**
+ * How a frame reception handler should look like
+ */
+typedef void (*reception_handler_t)(can_frame_t*);
+
 
 /**
  * Facilitates frame transmission and reception via a CAN adapter
@@ -23,10 +29,16 @@ typedef enum
 class CANAdapter
 {
   protected:
-    can_adapter_t adapter_type;
+    can_adapter_t       adapter_type;
 
   public:
-	/** Constructor */
+    /**
+     * Pointer to a function which shall be called
+     * when frames are being received from the CAN bus
+     */
+    reception_handler_t reception_handler;
+
+    /** Constructor */
 	CANAdapter();
 	/** Destructor */
 	virtual ~CANAdapter();

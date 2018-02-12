@@ -23,7 +23,6 @@
 
 /*
 #include <endian.h>
-#include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 */
@@ -168,12 +167,19 @@ static void* socketcan_receiver_thread(void* argv)
         {
 //            printf("Something happened.\n");
             auto len = read(sock->sockfd, &rx_frame, CAN_MTU);
+//            printf("Received %d bytes: Frame from 0x%0X, DLC=%d\n", (int) len, rx_frame.can_id, rx_frame.can_dlc);
 
-            printf("Received %d bytes.\n", (int) len);
+            if (len < 0)
+                continue;
+
+            if (sock->reception_handler != NULL)
+            {
+                sock->reception_handler(&rx_frame);
+            }
         }
         else
         {
-            printf("Received nothing.\n");
+//            printf("Received nothing.\n");
         }
     }
 
