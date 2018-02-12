@@ -13,6 +13,8 @@ int main()
      */
     SocketCAN can0;
 
+    can0.open("can0");
+
     can_frame_t frame;
     frame.can_id = 0x123;
     frame.can_dlc = 3;

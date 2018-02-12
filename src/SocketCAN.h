@@ -8,6 +8,15 @@
 #include <CANFrame.h>
 #include <stdbool.h>
 
+// IFNAMSIZ, ifreq
+#include <net/if.h>
+
+/**
+ * Interface request structure used for socket ioctl's
+ */
+typedef struct ifreq interface_request_t;
+
+
 /**
  * Facilitates frame transmission and reception via a CAN adapter
  */
@@ -19,6 +28,8 @@ class SocketCAN: public CANAdapter
      */
 	int sockfd;
 
+    interface_request_t if_request;
+
   public:
 	/** Constructor */
 	SocketCAN();
@@ -28,7 +39,7 @@ class SocketCAN: public CANAdapter
 	/**
 	 * Open and bind socket
 	 */
-	void open();
+	void open(char*);
 
 	/**
 	 * Returns whether the socket is open or closed
