@@ -31,7 +31,8 @@
 
 SocketCAN::SocketCAN()
    :CANAdapter(),
-    sockfd(-1)
+    sockfd(-1),
+    receiver_thread_id(0)
 {
     adapter_type = ADAPTER_SOCKETCAN;
     printf("SocketCAN adapter created.\n");
@@ -88,6 +89,9 @@ void SocketCAN::open(char* interface)
         return;
     }
     printf("Successfully bound socket to interface %d.\n", if_request.ifr_ifindex);
+
+    // Start a separate, event-driven thread for frame reception
+    start_receiver_thread();
 }
 
 
@@ -122,3 +126,33 @@ void SocketCAN::transmit(can_frame_t* frame)
     // TODO
     printf("Transmission via SocketCAN is not yet implemented.\n");
 }
+
+
+static void* socketcan_receiver_thread(void* argv)
+{
+    SocketCAN* sock = (SocketCAN*) argv;
+
+    // TODO: select...
+
+    printf("Child thread says hello world!\n");
+
+    return NULL;
+}
+
+
+void SocketCAN::start_receiver_thread()
+{
+    /*
+     * Frame reception is accomplished in a separate, event-driven thread.
+     *
+     * See also: https://www.thegeekstuff.com/2012/04/create-threads-in-linux/
+     */
+    int rc = pthread_create(&receiver_thread_id, NULL, &socketcan_receiver_thread, this);
+    if (rc != 0)
+    {
+        printf("Unable to start receiver thread.\n");
+        return;
+    }
+    printf("Successfully started receiver thread with ID %d.\n", (int) receiver_thread_id);
+}
+

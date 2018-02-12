@@ -7,7 +7,7 @@ OBJS = $(SRCS:.cpp=.o)
 CXX=g++
 CPPFLAGS=-Isrc
 CXXFLAGS=-std=gnu++14 -pedantic -Wall -Wextra
-LIBS=
+LIBS=-lpthread
 
 CXXFLAGS+=-g
 CXXFLAGS+=-O3

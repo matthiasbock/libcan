@@ -1,9 +1,8 @@
 
+// sleep
+#include <unistd.h>
 #include <SocketCAN.h>
-#include <iostream>
 
-
-using namespace std;
 
 int main()
 {
@@ -14,6 +13,8 @@ int main()
     SocketCAN can0;
 
     can0.open("can0");
+
+    sleep(1);
 
     can_frame_t frame;
     frame.can_id = 0x123;
