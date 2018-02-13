@@ -20,7 +20,7 @@ int main()
     adapter->reception_handler = &rx_handler;
     adapter->open("can0");
 
-    sleep(5);
+    sleep(7);
 
     can_frame_t frame;
     frame.can_id = 0x123;
@@ -33,7 +33,7 @@ int main()
 
     delete adapter;
 
-    sleep(1.1);
+    sleep(1.01);
 
     return 0;
 }

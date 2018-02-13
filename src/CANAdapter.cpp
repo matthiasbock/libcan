@@ -5,7 +5,8 @@
 
 CANAdapter::CANAdapter()
     :adapter_type(ADAPTER_NONE),
-     reception_handler(NULL)
+     reception_handler(NULL),
+     parser(NULL)
 {
     printf("CAN adapter created.\n");
 }
@@ -17,7 +18,7 @@ CANAdapter::~CANAdapter()
 }
 
 
-void CANAdapter::transmit(can_frame_t* frame)
+void CANAdapter::transmit(can_frame_t*)
 {
     if (adapter_type == ADAPTER_NONE)
     {

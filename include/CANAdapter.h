@@ -4,7 +4,11 @@
  * to facilitate frame transmission and reception.
  */
 
+#ifndef CAN_ADAPTER_H
+#define CAN_ADAPTER_H
+
 #include <CANFrame.h>
+#include <CANFrameParser.h>
 
 
 /**
@@ -38,6 +42,11 @@ class CANAdapter
      */
     reception_handler_t reception_handler;
 
+    /**
+     * Pointer to a CAN frame parser object
+     */
+    CANFrameParser* parser;
+
     /** Constructor */
 	CANAdapter();
 	/** Destructor */
@@ -48,3 +57,5 @@ class CANAdapter
 	 */
 	virtual void transmit(can_frame_t*);
 };
+
+#endif

@@ -38,7 +38,7 @@ RM = rm -f
 # Targets
 #
 
-all: lib
+all: lib $(TESTDIR)/$(TESTNAME)
 
 lib: lib$(LIBNAME).so
 
