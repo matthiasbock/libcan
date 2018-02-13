@@ -7,10 +7,12 @@ INCDIR = include
 SRCDIR = src
 TESTDIR = test
 
+# Compile the library
 LIBNAME = can
 LIBSRCS = $(wildcard $(SRCDIR)/*.cpp)
 LIBOBJS = $(LIBSRCS:.cpp=.o)
 
+# Compile library test program(s)
 TESTNAME = test
 TESTSRCS = $(wildcard $(TESTDIR)/*.cpp)
 TESTOBJS = $(TESTSRCS:.cpp=.o)
@@ -46,7 +48,7 @@ $(TESTDIR)/$(TESTNAME): $(TESTOBJS) lib$(LIBNAME).so
 	@$(RM) $@
 	$(CPP) $(CPPFLAGS) -L. -l$(LIBNAME) $^ -o $@
 
-run: $(TESTDIR)/$(TESTNAME)
+test: $(TESTDIR)/$(TESTNAME)
 	@./$<
 
 %.o: %.cpp
