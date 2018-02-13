@@ -4,6 +4,8 @@
 *.out
 *.elf
 *.bin
+*.so
+test/test
 
 # Eclipse
 .settings

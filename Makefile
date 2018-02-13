@@ -1,34 +1,56 @@
 
-SRCDIR=src
-SRCS = $(wildcard $(SRCDIR)/*.cpp)
-OBJS = $(SRCS:.cpp=.o)
+#
+# Files and folders configuration
+#
 
-# Compiler setup
-CXX=g++
-CPPFLAGS=-Isrc
-CXXFLAGS=-std=gnu++14 -pedantic -Wall -Wextra
-LIBS=-lpthread
+INCDIR = include
+SRCDIR = src
+TESTDIR = test
 
-CXXFLAGS+=-g
-CXXFLAGS+=-O3
+LIBNAME = can
+LIBSRCS = $(wildcard $(SRCDIR)/*.cpp)
+LIBOBJS = $(LIBSRCS:.cpp=.o)
 
-RM=rm -f
+TESTNAME = test
+TESTSRCS = $(wildcard $(TESTDIR)/*.cpp)
+TESTOBJS = $(TESTSRCS:.cpp=.o)
 
-.PHONY: all run clean rebuild
 
-all: main.elf
+#
+# Toolchain setup
+#
+CPP = g++
+CPPFLAGS += -I$(INCDIR)
+CPPFLAGS += -std=gnu++14
+CPPFLAGS += -Wall -Wextra -pedantic
+CPPFLAGS += -lpthread
+CPPFLAGS += -g
+CPPFLAGS += -O3
 
-run: main.elf
+RM = rm -f
+
+
+#
+# Targets
+#
+
+all: lib
+
+lib: lib$(LIBNAME).so
+
+lib$(LIBNAME).so: $(LIBSRCS)
+	@$(RM) $@
+	$(CPP) $(CPPFLAGS) -fPIC -shared $^ -o $@
+
+$(TESTDIR)/$(TESTNAME): $(TESTOBJS) lib$(LIBNAME).so
+	@$(RM) $@
+	$(CPP) $(CPPFLAGS) -L. -l$(LIBNAME) $^ -o $@
+
+run: $(TESTDIR)/$(TESTNAME)
 	@./$<
 
-main.elf: $(OBJS)
-	@$(RM) $@
-	$(CXX) -o $@ $^ $(LIBS)
-
 %.o: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	$(CPP) $(CPPFLAGS) -c $^ -o $@
 
 clean:
-	@$(RM) $(SRCDIR)/*.o
-
-rebuild: clean all
+	@$(RM) $(SRCDIR)/*.o lib$(LIBNAME).so $(TESTDIR)/$(TESTNAME)
