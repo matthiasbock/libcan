@@ -28,6 +28,8 @@ CPPFLAGS += -Wall -Wextra -pedantic
 CPPFLAGS += -lpthread
 CPPFLAGS += -g
 CPPFLAGS += -O3
+# Required for linking to shared library:
+CPPFLAGS += -fPIC
 
 RM = rm -f
 
@@ -40,9 +42,9 @@ all: lib
 
 lib: lib$(LIBNAME).so
 
-lib$(LIBNAME).so: $(LIBSRCS)
+lib$(LIBNAME).so: $(LIBOBJS)
 	@$(RM) $@
-	$(CPP) $(CPPFLAGS) -fPIC -shared $^ -o $@
+	$(CPP) $(CPPFLAGS) -shared $^ -o $@
 
 $(TESTDIR)/$(TESTNAME): $(TESTOBJS) lib$(LIBNAME).so
 	@$(RM) $@
