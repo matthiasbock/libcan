@@ -166,8 +166,8 @@ static void* socketcan_receiver_thread(void* argv)
         if (select(maxfd+1, &descriptors, NULL, NULL, &timeout) == 1)
         {
 //            printf("Something happened.\n");
-            auto len = read(sock->sockfd, &rx_frame, CAN_MTU);
-            printf("Received %d bytes: Frame from 0x%0X, DLC=%d\n", (int) len, rx_frame.can_id, rx_frame.can_dlc);
+            int len = read(sock->sockfd, &rx_frame, CAN_MTU);
+//            printf("Received %d bytes: Frame from 0x%0X, DLC=%d\n", len, rx_frame.can_id, rx_frame.can_dlc);
 
             if (len < 0)
                 continue;
@@ -179,7 +179,12 @@ static void* socketcan_receiver_thread(void* argv)
 
             if (sock->parser != NULL)
             {
+//                printf("Invoking parser...\n");
                 sock->parser->parse_frame(&rx_frame);
+            }
+            else
+            {
+//                printf("sock->parser is NULL.\n");
             }
         }
         else

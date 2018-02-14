@@ -7,6 +7,7 @@
 #ifndef CAN_ADAPTER_H
 #define CAN_ADAPTER_H
 
+#include <unistd.h>
 #include <CANFrame.h>
 #include <CANFrameParser.h>
 
@@ -33,7 +34,7 @@ typedef void (*reception_handler_t)(can_frame_t*);
 class CANAdapter
 {
   protected:
-    can_adapter_t       adapter_type;
+    can_adapter_t adapter_type;
 
   public:
     /**
@@ -45,7 +46,7 @@ class CANAdapter
     /**
      * Pointer to a CAN frame parser object
      */
-    CANFrameParser* parser;
+    CANFrameParser* parser = NULL;
 
     /** Constructor */
 	CANAdapter();

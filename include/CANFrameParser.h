@@ -11,7 +11,7 @@ class CANFrameParser
     CANFrameParser();
     ~CANFrameParser();
 
-    void parse_frame(can_frame_t*);
+    virtual void parse_frame(can_frame_t*);
 };
 
 #endif
