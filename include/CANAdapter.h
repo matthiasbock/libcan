@@ -20,6 +20,7 @@ typedef enum
     ADAPTER_NONE,
     ADAPTER_SOCKETCAN,
     ADAPTER_SLCAN,
+    ADAPTER_LOGFILE,
 } can_adapter_t;
 
 /**

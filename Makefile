@@ -9,7 +9,7 @@ TESTDIR = test
 
 # Compile the library
 LIBNAME = can
-LIBSRCS = $(wildcard $(SRCDIR)/*.cpp)
+LIBSRCS = $(wildcard $(SRCDIR)/*.cpp $(SRCDIR)/CANalyzer/*.cpp)
 LIBOBJS = $(LIBSRCS:.cpp=.o)
 
 # Compile library test program(s)
@@ -44,17 +44,17 @@ lib: lib$(LIBNAME).so
 
 lib$(LIBNAME).so: $(LIBOBJS)
 	@$(RM) $@
-	$(CPP) $(CPPFLAGS) -shared $^ -o $@
+	$(CPP) $(CPPFLAGS) -shared -o $@ $^
 
 $(TESTDIR)/$(TESTNAME): $(TESTOBJS) lib$(LIBNAME).so
 	@$(RM) $@
-	$(CPP) $(CPPFLAGS) -L. -l$(LIBNAME) $^ -o $@
+	$(CPP) $(CPPFLAGS) -o $@ $^
 
 test: $(TESTDIR)/$(TESTNAME)
 	@./$<
 
 %.o: %.cpp
-	$(CPP) $(CPPFLAGS) -c $^ -o $@
+	$(CPP) $(CPPFLAGS) -o $@ -c $^
 
 clean:
 	@$(RM) $(SRCDIR)/*.o lib$(LIBNAME).so $(TESTDIR)/$(TESTNAME)
