@@ -4,6 +4,8 @@
  * and transmit CAN frames via SocketCAN.
  */
 
+#ifndef MINGW
+
 #include <SocketCAN.h>
 #include <stdio.h>
 // strncpy
@@ -217,3 +219,4 @@ void SocketCAN::start_receiver_thread()
     printf("Successfully started receiver thread with ID %d.\n", (int) receiver_thread_id);
 }
 
+#endif

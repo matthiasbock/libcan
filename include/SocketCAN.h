@@ -4,6 +4,9 @@
  * to facilitates frame transmission and reception.
  */
 
+#if (!defined(SOCKETCAN_H)) && (!defined(MINGW))
+#define SOCKETCAN_H
+
 #include <CANAdapter.h>
 #include <CANFrame.h>
 #include <stdbool.h>
@@ -81,3 +84,4 @@ class SocketCAN: public CANAdapter
     void start_receiver_thread();
 };
 
+#endif
