@@ -9,8 +9,14 @@ TESTDIR = test
 
 # Compile the library
 LIBNAME = can
-LIBSRCS = $(wildcard $(SRCDIR)/*.cpp $(SRCDIR)/CANalyzer/*.cpp)
+LIBSRCS  = $(wildcard $(SRCDIR)/*.cpp)
 LIBOBJS = $(LIBSRCS:.cpp=.o)
+
+# Support for Vector stuff
+LIBSRCS += $(wildcard $(SRCDIR)/Vector/*.cpp)
+LIBSRCS += $(wildcard $(SRCDIR)/Vector/CANalyzer/*.cpp)
+LIBSRCS += $(wildcard $(SRCDIR)/Vector/XLDriverLibrary/*.cpp)
+CPPFLAGS += -DENABLE_VECTOR
 
 # Compile library test program(s)
 TESTNAME = test
