@@ -9,7 +9,7 @@ class CANFrameParser
 {
   public:
     CANFrameParser();
-    ~CANFrameParser();
+    virtual ~CANFrameParser();
 
     virtual void parse_frame(can_frame_t*);
 };
