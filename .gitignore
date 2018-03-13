@@ -3,13 +3,15 @@
 *.a
 *.out
 *.elf
+*.exe
 *.bin
 *.so
-test/test
+test
+test-pcan
+test-pcan.exe
 
 # Eclipse
 .settings
 .project
 .cproject
 .metadata
-

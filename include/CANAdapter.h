@@ -46,6 +46,7 @@ class CANAdapter
 
     /**
      * Pointer to a CAN frame parser object
+     * which's parse_frame() method will be called when frames are received
      */
     CANFrameParser* parser = NULL;
 

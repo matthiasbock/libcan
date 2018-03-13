@@ -10,7 +10,37 @@
 #include <stdbool.h>
 #include <CANAdapter.h>
 #include <CANFrame.h>
+
+#ifndef MINGW
+// Serial port
 #include <termios.h>
+#else
+// TODO: How to implement serial port configuration on Windows?
+
+// stubs
+struct termios
+{
+    int c_iflag;       /* input mode flags */
+    int c_oflag;       /* output mode flags */
+    int c_cflag;       /* control mode flags */
+    int c_lflag;       /* local mode flags */
+    int c_line;            /* line discipline */
+    int c_cc[8];        /* control characters */
+    int c_ispeed;       /* input speed */
+    int c_ospeed;       /* output speed */
+};
+#define O_NONBLOCK  0
+#define CS8         0
+#define CREAD       0
+#define CLOCAL      0
+#define B115200     0
+#define TCSANOW     0
+#define VMIN        0
+#define VTIME       0
+void cfsetispeed(struct termios*, int) {}
+void cfsetospeed(struct termios*, int) {}
+void tcsetattr(int, int, struct termios*) {}
+#endif
 
 // Multi-threading
 #include <pthread.h>
