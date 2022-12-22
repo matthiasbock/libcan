@@ -1,8 +1,4 @@
 
-#
-# Files and folders configuration
-#
-
 INCDIR = include
 SRCDIR = src
 LIBDIR = lib
@@ -21,6 +17,8 @@ LIBSRCS += $(wildcard $(SRCDIR)/Vector/XLDriverLibrary/*.cpp)
 CPPFLAGS += -DENABLE_VECTOR
 endif
 
+TEST_ELF = $(TESTDIR)/test.elf
+
 
 #
 # Toolchain setup
@@ -38,8 +36,6 @@ CPPFLAGS += -fPIC
 CPPFLAGS += -I$(INCDIR)
 CPPFLAGS += -lpthread
 
-RM = rm -f
-
 
 #
 # Targets
@@ -51,20 +47,20 @@ lib: lib$(LIBNAME).so
 
 lib$(LIBNAME).so: $(LIBOBJS)
 	@$(RM) $@
-	$(CPP) $(CPPFLAGS) -shared -o $@ $^
+	$(CPP) -shared -o $@ $^ $(CPPFLAGS)
 
-$(TESTDIR)/test: $(TESTDIR)/test.o lib$(LIBNAME).so
+$(TEST_ELF): $(TESTDIR)/test.o lib$(LIBNAME).so
 	@$(RM) $@
-	$(CPP) $(CPPFLAGS) -o $@ $^
+	$(CPP) -o $@ $^ $(CPPFLAGS)
 
-test: $(TESTDIR)/test
+test: $(TEST_ELF)
 	@./$<
 
 %.o: %.cpp
-	$(CPP) $(CPPFLAGS) -o $@ -c $^
+	$(CPP) -o $@ -c $^ $(CPPFLAGS)
 
 clean:
-	@$(RM) $(SRCDIR)/*.o lib$(LIBNAME).so $(TESTDIR)/test $(TESTDIR)/test-pcan.exe
+	@rm -fv $(SRCDIR)/*.o lib$(LIBNAME).so $(TEST_ELF) $(TESTDIR)/test-pcan.exe
 
 
 #
