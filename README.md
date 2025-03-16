@@ -69,5 +69,4 @@ not to mention, writing a program with it, that also runs under Linux.
 
 **Note**:
 
-As of march 2018, none of Vector's CAN devices are not supported under Linux at all,
-not even with non-free software.
+As of march 2018, none of Vector's CAN devices are supported under Linux at all, not even with non-free software.
